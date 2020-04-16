@@ -1,0 +1,2 @@
+add_subdirectory(metadata_reader)
+add_subdirectory(metadata_writer)
