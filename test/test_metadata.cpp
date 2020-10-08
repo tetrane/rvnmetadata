@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(resource_binary_wrong_type)
 
 BOOST_AUTO_TEST_CASE(resource_json_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/json/wrong_type.json"),
+	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/json/wrong_type.json"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
@@ -570,7 +570,7 @@ BOOST_AUTO_TEST_CASE(known_resource_type_to_string)
 {
 	std::vector<std::string> string_type {
 		"trace_bin", "trace_cache", "memory_history", "strings", "stack_events",
-		"binary_ranges", "pc_ranges", "kernel_description"
+		"binary_ranges", "pc_ranges", "kernel_description", "block"
 	};
 
 	BOOST_CHECK_EQUAL(string_type.size(), static_cast<std::uint32_t>(ResourceType::_MaxValue));
@@ -593,7 +593,7 @@ BOOST_AUTO_TEST_CASE(known_resource_name_to_type)
 {
 	std::vector<std::string> string_type {
 		"trace_bin", "trace_cache", "memory_history", "strings", "stack_events",
-		"binary_ranges", "pc_ranges", "kernel_description"
+		"binary_ranges", "pc_ranges", "kernel_description", "block"
 	};
 
 	BOOST_CHECK_EQUAL(string_type.size(), static_cast<std::uint32_t>(ResourceType::_MaxValue));

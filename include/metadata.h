@@ -84,7 +84,8 @@ enum class ResourceType : std::uint32_t {
 	BinaryRanges = 0x00000006,
 	PCRanges = 0x00000007,
 	KernelDescription = 0x00000008,
-	_MaxValue = 0x00000008,
+	Block = 0x00000009,
+	_MaxValue = 0x00000009,
 };
 
 /// \brief the method translate a ResourceType into a string name

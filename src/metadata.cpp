@@ -377,6 +377,8 @@ std::experimental::string_view to_string(const ResourceType type)
 			return "pc_ranges";
 		case ResourceType::KernelDescription:
 			return "kernel_description";
+		case ResourceType::Block:
+			return "block";
 	}
 	throw UnknownResourceError(
 			("Resource type with value " + std::to_string(static_cast<std::uint32_t>(type)) + " is not known").c_str());
@@ -400,6 +402,8 @@ ResourceType to_resource_type(std::experimental::string_view resource_name)
 		return ResourceType::PCRanges;
 	} else if (resource_name == "kernel_description") {
 		return ResourceType::KernelDescription;
+	} else if (resource_name == "block") {
+		return ResourceType::Block;
 	}
 	throw UnknownResourceError(("Resource type named " + resource_name.to_string() + " is not known").c_str());
 }
