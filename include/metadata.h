@@ -81,11 +81,12 @@ enum class ResourceType : std::uint32_t {
 	MemHist = 0x00000003,
 	Strings = 0x00000004,
 	StackEvents = 0x00000005,
-	BinaryRanges = 0x00000006,
+	BinaryRanges = 0x00000006, // Deprecated
 	PCRanges = 0x00000007,
 	KernelDescription = 0x00000008,
 	Block = 0x00000009,
-	_MaxValue = 0x00000009,
+	OssiRanges = 0x0000000a,
+	_MaxValue = 0x0000000a,
 };
 
 /// \brief the method translate a ResourceType into a string name
