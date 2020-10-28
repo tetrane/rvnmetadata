@@ -570,7 +570,7 @@ BOOST_AUTO_TEST_CASE(known_resource_type_to_string)
 {
 	std::vector<std::string> string_type {
 		"trace_bin", "trace_cache", "memory_history", "strings", "stack_events",
-		"binary_ranges", "pc_ranges", "kernel_description", "block"
+		"binary_ranges", "pc_ranges", "kernel_description", "block", "ossi_ranges"
 	};
 
 	BOOST_CHECK_EQUAL(string_type.size(), static_cast<std::uint32_t>(ResourceType::_MaxValue));
@@ -593,7 +593,7 @@ BOOST_AUTO_TEST_CASE(known_resource_name_to_type)
 {
 	std::vector<std::string> string_type {
 		"trace_bin", "trace_cache", "memory_history", "strings", "stack_events",
-		"binary_ranges", "pc_ranges", "kernel_description", "block"
+		"binary_ranges", "pc_ranges", "kernel_description", "block", "ossi_ranges"
 	};
 
 	BOOST_CHECK_EQUAL(string_type.size(), static_cast<std::uint32_t>(ResourceType::_MaxValue));
