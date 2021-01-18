@@ -1,0 +1,11 @@
+{
+	"metadata": {
+        "metadata_version": "1",
+        "type": "8",
+        "format_version": "1.0.0",
+        "tool_version": "1.0.0",
+        "tool_name": "TestMetaDataWriter",
+        "tool_info": "Tests version 1.0.0",
+        "generation_date": "42424242"
+	}
+}

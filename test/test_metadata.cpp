@@ -67,49 +67,49 @@ BOOST_AUTO_TEST_CASE(json_raw_metadata)
 
 BOOST_AUTO_TEST_CASE(resource_unknown_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/foo.png"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/foo.png"),
 	                  reven::metadata::UnknownResourceError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_not_versioned)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/sqlite/without_metadata.sqlite"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/sqlite/without_metadata.sqlite"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_binary_not_versioned)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/binary/without_metadata.bin"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/binary/without_metadata.bin"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_josn_not_versioned)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/json/without_metadata.json"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/json/without_metadata.json"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/sqlite/wrong_type.sqlite"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/sqlite/wrong_type.sqlite"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_binary_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/binary/wrong_type.bin"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/binary/wrong_type.bin"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_json_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/json/wrong_type.json"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/json/wrong_type.json"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_outdated)
 {
-	auto md = Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/sqlite/good.sqlite");
+	auto md = Metadata::from_resource(TEST_DATA "/sqlite/outdated.sqlite");
 
 	BOOST_CHECK(md.type() == ResourceType::MemHist);
 
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(resource_sqlite_outdated)
 
 BOOST_AUTO_TEST_CASE(resource_binary_outdated)
 {
-	auto md = Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/binary/good.bin");
+	auto md = Metadata::from_resource(TEST_DATA "/binary/outdated.bin");
 
 	BOOST_CHECK(md.type() == ResourceType::TraceBin);
 
@@ -149,13 +149,13 @@ BOOST_AUTO_TEST_CASE(resource_binary_outdated)
 
 BOOST_AUTO_TEST_CASE(resource_json_incompatible)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/json/incompatible.json"),
+	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/json/incompatible.json"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_good)
 {
-	auto md = Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/sqlite/good.sqlite");
+	auto md = Metadata::from_resource(TEST_DATA "/sqlite/good.sqlite");
 
 	BOOST_CHECK(md.type() == ResourceType::MemHist);
 
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(resource_sqlite_good)
 
 BOOST_AUTO_TEST_CASE(resource_binary_good)
 {
-	auto md = Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v2/binary/good.bin");
+	auto md = Metadata::from_resource(TEST_DATA "/binary/good.bin");
 
 	BOOST_CHECK(md.type() == ResourceType::TraceBin);
 
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(resource_binary_good)
 
 BOOST_AUTO_TEST_CASE(resource_json_good)
 {
-	auto md = Metadata::from_resource(REVEN_TEST_DATA "/rvnmetadata/v1/json/good.json");
+	auto md = Metadata::from_resource(TEST_DATA "/json/good.json");
 
 	BOOST_CHECK(md.type() == ResourceType::KernelDescription);
 
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_unknown_type)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "foo.png";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/foo.png", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/foo.png", tmp_file);
 
 	BOOST_CHECK_THROW(
 		Metadata::set_metadata(
@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_not_versioned)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "without_metadata.sqlite";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/sqlite/without_metadata.sqlite", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/sqlite/without_metadata.sqlite", tmp_file);
 
 	auto check_error_message = [&](const reven::metadata::WriteMetadataError& e) {
 		return e.what() == std::string("Missing metadata. Is this a resource database?");
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_not_versioned)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "without_metadata.bin";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/binary/without_metadata.bin", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/binary/without_metadata.bin", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_not_versioned)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "without_metadata.json";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/json/without_metadata.json", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/json/without_metadata.json", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -319,8 +319,8 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_outdated)
 {
 	transient_directory tmp_dir{};
 
-	const auto tmp_file = tmp_dir.path / "good.sqlite";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/sqlite/good.sqlite", tmp_file);
+	const auto tmp_file = tmp_dir.path / "outdated.sqlite";
+	boost::filesystem::copy_file(TEST_DATA "/sqlite/outdated.sqlite", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -341,8 +341,8 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_outdated)
 {
 	transient_directory tmp_dir{};
 
-	const auto tmp_file = tmp_dir.path / "good.bin";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/binary/good.bin", tmp_file);
+	const auto tmp_file = tmp_dir.path / "outdated.bin";
+	boost::filesystem::copy_file(TEST_DATA "/binary/outdated.bin", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -364,7 +364,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_incompatible)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "incompatible.json";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v2/json/incompatible.json", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/json/incompatible.json", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_wrong_type)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "wrong_type.sqlite";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v2/sqlite/wrong_type.sqlite", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/sqlite/wrong_type.sqlite", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -415,7 +415,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_wrong_type)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "wrong_type.bin";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v2/binary/wrong_type.bin", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/binary/wrong_type.bin", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -444,7 +444,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_wrong_type)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "wrong_type.json";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/json/wrong_type.json", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/json/wrong_type.json", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -473,7 +473,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_good)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "good.sqlite";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v2/sqlite/good.sqlite", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/sqlite/good.sqlite", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -502,7 +502,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_good)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "good.bin";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v2/binary/good.bin", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/binary/good.bin", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
@@ -531,7 +531,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_good)
 	transient_directory tmp_dir{};
 
 	const auto tmp_file = tmp_dir.path / "good.json";
-	boost::filesystem::copy_file(REVEN_TEST_DATA "/rvnmetadata/v1/json/good.json", tmp_file);
+	boost::filesystem::copy_file(TEST_DATA "/json/good.json", tmp_file);
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
