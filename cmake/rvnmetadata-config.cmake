@@ -7,6 +7,6 @@ find_dependency(rvnbinresource REQUIRED)
 find_dependency(rvnjsonresource REQUIRED)
 find_package(Boost 1.49 COMPONENTS filesystem REQUIRED)
 
-if(NOT TARGET rvnmetadata)
+if(NOT TARGET rvnmetadata::common)
   include("${RVNMETADATA_CMAKE_DIR}/rvnmetadata-targets.cmake")
 endif()

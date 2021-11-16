@@ -1,7 +1,11 @@
 #include <boost/filesystem.hpp>
 #include <string>
 
-#include <metadata.h>
+#include <metadata-common.h>
+#include <metadata-bin.h>
+#include <metadata-json.h>
+#include <metadata-sql.h>
+#include <metadata-file.h>
 
 using reven::metadata::ResourceType;
 using reven::metadata::Metadata;

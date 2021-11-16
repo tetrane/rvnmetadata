@@ -16,8 +16,8 @@ BOOST_AUTO_TEST_CASE(sqlite_raw_metadata)
 		"TestSqliteMetadataWriter", Version(3, 2, 1, {{"foo"}, {"bar"}}, {{"bar"}, {42}}), "Test v1"
 	);
 
-	auto sqliteMetadata = md.to_sqlite_raw_metadata();
-	auto md2 = Metadata::from_raw_metadata(sqliteMetadata);
+	auto sqliteMetadata = to_sqlite_raw_metadata(md);
+	auto md2 = reven::metadata::from_raw_metadata(sqliteMetadata);
 
 	BOOST_CHECK(md.type() == md2.type());
 	BOOST_CHECK(check_version_strict_equality(md.format_version(), md2.format_version()));
@@ -35,8 +35,8 @@ BOOST_AUTO_TEST_CASE(binary_raw_metadata)
 		"TestBinaryMetadataWriter", Version(3, 2, 1, {{"foo"}, {"bar"}}, {{"bar"}, {42}}), "Test v1"
 	);
 
-	auto binaryMetadata = md.to_bin_raw_metadata();
-	auto md2 = Metadata::from_raw_metadata(binaryMetadata);
+	auto binaryMetadata = to_bin_raw_metadata(md);
+	auto md2 = reven::metadata::from_raw_metadata(binaryMetadata);
 
 	BOOST_CHECK(md.type() == md2.type());
 	BOOST_CHECK(check_version_strict_equality(md.format_version(), md2.format_version()));
@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(json_raw_metadata)
 		"TestJsonMetadataWriter", Version(3, 2, 1, {{"foo"}, {"bar"}}, {{"bar"}, {42}}), "Test v1"
 	);
 
-	auto jmd = md.to_json_raw_metadata();
-	auto md2 = Metadata::from_raw_metadata(jmd);
+	auto jmd = to_json_raw_metadata(md);
+	auto md2 = reven::metadata::from_raw_metadata(jmd);
 
 	BOOST_CHECK(md.type() == md2.type());
 	BOOST_CHECK(check_version_strict_equality(md.format_version(), md2.format_version()));
@@ -67,49 +67,49 @@ BOOST_AUTO_TEST_CASE(json_raw_metadata)
 
 BOOST_AUTO_TEST_CASE(resource_unknown_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/foo.png"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/foo.png"),
 	                  reven::metadata::UnknownResourceError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_not_versioned)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/sqlite/without_metadata.sqlite"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/sqlite/without_metadata.sqlite"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_binary_not_versioned)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/binary/without_metadata.bin"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/binary/without_metadata.bin"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_josn_not_versioned)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/json/without_metadata.json"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/json/without_metadata.json"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/sqlite/wrong_type.sqlite"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/sqlite/wrong_type.sqlite"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_binary_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/binary/wrong_type.bin"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/binary/wrong_type.bin"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_json_wrong_type)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/json/wrong_type.json"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/json/wrong_type.json"),
 	                  reven::metadata::UnknownMetadataTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_outdated)
 {
-	auto md = Metadata::from_resource(TEST_DATA "/sqlite/outdated.sqlite");
+	auto md = reven::metadata::from_resource(TEST_DATA "/sqlite/outdated.sqlite");
 
 	BOOST_CHECK(md.type() == ResourceType::MemHist);
 
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(resource_sqlite_outdated)
 
 BOOST_AUTO_TEST_CASE(resource_binary_outdated)
 {
-	auto md = Metadata::from_resource(TEST_DATA "/binary/outdated.bin");
+	auto md = reven::metadata::from_resource(TEST_DATA "/binary/outdated.bin");
 
 	BOOST_CHECK(md.type() == ResourceType::TraceBin);
 
@@ -149,13 +149,13 @@ BOOST_AUTO_TEST_CASE(resource_binary_outdated)
 
 BOOST_AUTO_TEST_CASE(resource_json_incompatible)
 {
-	BOOST_CHECK_THROW(Metadata::from_resource(TEST_DATA "/json/incompatible.json"),
+	BOOST_CHECK_THROW(reven::metadata::from_resource(TEST_DATA "/json/incompatible.json"),
 	                  reven::metadata::ReadMetadataError);
 }
 
 BOOST_AUTO_TEST_CASE(resource_sqlite_good)
 {
-	auto md = Metadata::from_resource(TEST_DATA "/sqlite/good.sqlite");
+	auto md = reven::metadata::from_resource(TEST_DATA "/sqlite/good.sqlite");
 
 	BOOST_CHECK(md.type() == ResourceType::MemHist);
 
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(resource_sqlite_good)
 
 BOOST_AUTO_TEST_CASE(resource_binary_good)
 {
-	auto md = Metadata::from_resource(TEST_DATA "/binary/good.bin");
+	auto md = reven::metadata::from_resource(TEST_DATA "/binary/good.bin");
 
 	BOOST_CHECK(md.type() == ResourceType::TraceBin);
 
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(resource_binary_good)
 
 BOOST_AUTO_TEST_CASE(resource_json_good)
 {
-	auto md = Metadata::from_resource(TEST_DATA "/json/good.json");
+	auto md = reven::metadata::from_resource(TEST_DATA "/json/good.json");
 
 	BOOST_CHECK(md.type() == ResourceType::KernelDescription);
 
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_unknown_type)
 	boost::filesystem::copy_file(TEST_DATA "/foo.png", tmp_file);
 
 	BOOST_CHECK_THROW(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_not_versioned)
 		return e.what() == std::string("Missing metadata. Is this a resource database?");
 	};
 	BOOST_CHECK_EXCEPTION(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_not_versioned)
 		return e.what() == std::string("Wrong magic");
 	};
 	BOOST_CHECK_EXCEPTION(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_not_versioned)
 		return e.what() == std::string("Missing \"metadata\" field");
 	};
 	BOOST_CHECK_EXCEPTION(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::KernelDescription,
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_outdated)
 	                                         boost::filesystem::perms::owner_write);
 
 	BOOST_CHECK_THROW(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_outdated)
 	                                         boost::filesystem::perms::owner_write);
 
 	BOOST_CHECK_THROW(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_incompatible)
 	                                         boost::filesystem::perms::owner_write);
 
 	BOOST_CHECK_THROW(
-		Metadata::set_metadata(
+		set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::KernelDescription,
@@ -390,7 +390,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_wrong_type)
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
-	Metadata::set_metadata(
+	set_metadata(
 		tmp_file.c_str(),
 		Metadata(
 			ResourceType::Strings,
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_wrong_type)
 		)
 	);
 
-	auto md = Metadata::from_resource(tmp_file.c_str());
+	auto md = reven::metadata::from_resource(tmp_file.c_str());
 
 	BOOST_CHECK(md.type() == ResourceType::Strings);
 	BOOST_CHECK(md.format_version() == Version(42, 42, 42));
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_wrong_type)
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
-	Metadata::set_metadata(
+	set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -429,7 +429,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_wrong_type)
 			)
 	);
 
-	auto md = Metadata::from_resource(tmp_file.c_str());
+	auto md = reven::metadata::from_resource(tmp_file.c_str());
 
 	BOOST_CHECK(md.type() == ResourceType::Strings);
 	BOOST_CHECK(md.format_version() == Version(42, 42, 42));
@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_wrong_type)
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
-	Metadata::set_metadata(
+	set_metadata(
 		tmp_file.c_str(),
 		Metadata(
 			ResourceType::KernelDescription,
@@ -458,7 +458,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_wrong_type)
 		)
 	);
 
-	auto md = Metadata::from_resource(tmp_file.c_str());
+	auto md = reven::metadata::from_resource(tmp_file.c_str());
 
 	BOOST_CHECK(md.type() == ResourceType::KernelDescription);
 	BOOST_CHECK(md.format_version() == Version(42, 42, 42));
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_good)
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
-	Metadata::set_metadata(
+	set_metadata(
 		tmp_file.c_str(),
 		Metadata(
 			ResourceType::Strings,
@@ -487,7 +487,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_sqlite_good)
 		)
 	);
 
-	auto md = Metadata::from_resource(tmp_file.c_str());
+	auto md = reven::metadata::from_resource(tmp_file.c_str());
 
 	BOOST_CHECK(md.type() == ResourceType::Strings);
 	BOOST_CHECK(md.format_version() == Version(42, 42, 42));
@@ -506,7 +506,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_good)
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
-	Metadata::set_metadata(
+	set_metadata(
 			tmp_file.c_str(),
 			Metadata(
 				ResourceType::Strings,
@@ -516,7 +516,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_binary_good)
 			)
 	);
 
-	auto md = Metadata::from_resource(tmp_file.c_str());
+	auto md = reven::metadata::from_resource(tmp_file.c_str());
 
 	BOOST_CHECK(md.type() == ResourceType::Strings);
 	BOOST_CHECK(md.format_version() == Version(42, 42, 42));
@@ -535,7 +535,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_good)
 	boost::filesystem::permissions(tmp_file, boost::filesystem::perms::owner_read |
 	                                         boost::filesystem::perms::owner_write);
 
-	Metadata::set_metadata(
+	set_metadata(
 		tmp_file.c_str(),
 		Metadata(
 			ResourceType::Strings,
@@ -545,7 +545,7 @@ BOOST_AUTO_TEST_CASE(set_metadata_resource_json_good)
 		)
 	);
 
-	auto md = Metadata::from_resource(tmp_file.c_str());
+	auto md = reven::metadata::from_resource(tmp_file.c_str());
 
 	BOOST_CHECK(md.type() == ResourceType::Strings);
 	BOOST_CHECK(md.format_version() == Version(42, 42, 42));
@@ -638,16 +638,16 @@ BOOST_AUTO_TEST_CASE(custom_metadata)
 	);
 
 	error_message = "Binary resource does not support custom metadata.";
-	BOOST_CHECK_EXCEPTION(md.to_bin_raw_metadata(),
+	BOOST_CHECK_EXCEPTION(to_bin_raw_metadata(md),
 	                      reven::metadata::WriteMetadataError,
 	                      check_write_metadata_error_message);
 
 	error_message = "SQLITE resource does not support custom metadata.";
-	BOOST_CHECK_EXCEPTION(md.to_sqlite_raw_metadata(),
+	BOOST_CHECK_EXCEPTION(to_sqlite_raw_metadata(md),
 	                      reven::metadata::WriteMetadataError,
 	                      check_write_metadata_error_message);
 
-	BOOST_CHECK_NO_THROW(md.to_json_raw_metadata());
+	BOOST_CHECK_NO_THROW(to_json_raw_metadata(md));
 
 
 	/* Test custom metadata format errors */

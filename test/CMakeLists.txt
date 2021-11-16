@@ -30,7 +30,12 @@ target_link_libraries(test_version
   PUBLIC
     Boost::boost
   PRIVATE
-    rvnmetadata
+    common
+    # the targets below are technically not useful, but nedded due to test_helpers.h
+    sql
+    bin
+    json
+    file
     Boost::unit_test_framework
     Boost::filesystem
 )
@@ -54,7 +59,11 @@ target_link_libraries(test_metadata
   PUBLIC
     Boost::boost
   PRIVATE
-    rvnmetadata
+    common
+    sql
+    bin
+    json
+    file
     Boost::unit_test_framework
     Boost::filesystem
 )

@@ -24,50 +24,211 @@ find_package(rvnbinresource REQUIRED)
 find_package(rvnjsonresource REQUIRED)
 find_package(Boost 1.49 COMPONENTS program_options filesystem REQUIRED)
 
-add_library(rvnmetadata
-  src/metadata.cpp
+## common
+
+add_library(common
+  src/metadata-common.cpp
 )
 
-target_compile_options(rvnmetadata PRIVATE -W -Wall -Wextra -Wmissing-include-dirs -Wunknown-pragmas -Wpointer-arith
--Wmissing-field-initializers -Wno-multichar -Wreturn-type)
+target_compile_options(common PRIVATE -W -Wall -Wextra -Wmissing-include-dirs -Wunknown-pragmas
+-Wpointer-arith -Wmissing-field-initializers -Wno-multichar -Wreturn-type)
 
 if(WARNING_AS_ERROR)
-  target_compile_options(rvnmetadata PRIVATE -Werror)
+  target_compile_options(common PRIVATE -Werror)
 endif()
 
 if(BUILD_TEST_COVERAGE)
-  target_compile_options(rvnmetadata PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
-  target_link_libraries(rvnmetadata PRIVATE gcov)
+  target_compile_options(common PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
+  target_link_libraries(common PRIVATE gcov)
 endif()
 
-target_include_directories(rvnmetadata
+target_include_directories(common
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 set(PUBLIC_HEADERS
-  include/metadata.h
+  include/metadata-common.h
 )
 
-target_link_libraries(rvnmetadata
+set_target_properties(common PROPERTIES
+  PUBLIC_HEADER "${PUBLIC_HEADERS}"
+  POSITION_INDEPENDENT_CODE ON
+  PREFIX "librvnmetadata-"
+)
+
+## json
+
+add_library(json
+  src/metadata-json.cpp
+)
+
+target_compile_options(json PRIVATE -W -Wall -Wextra -Wmissing-include-dirs -Wunknown-pragmas -Wpointer-arith
+-Wmissing-field-initializers -Wno-multichar -Wreturn-type)
+
+if(WARNING_AS_ERROR)
+  target_compile_options(json PRIVATE -Werror)
+endif()
+
+if(BUILD_TEST_COVERAGE)
+  target_compile_options(json PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
+  target_link_libraries(json PRIVATE gcov)
+endif()
+
+target_include_directories(json
   PUBLIC
-    rvnsqlite
-    rvnbinresource
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+set(PUBLIC_HEADERS
+  include/metadata-json.h
+)
+
+target_link_libraries(json
+  PUBLIC
+    common
     rvnjsonresource
+)
+
+set_target_properties(json PROPERTIES
+  PUBLIC_HEADER "${PUBLIC_HEADERS}"
+  POSITION_INDEPENDENT_CODE ON
+  PREFIX "librvnmetadata-"
+)
+
+## sql
+
+add_library(sql
+  src/metadata-sql.cpp
+)
+
+target_compile_options(sql PRIVATE -W -Wall -Wextra -Wmissing-include-dirs -Wunknown-pragmas -Wpointer-arith
+-Wmissing-field-initializers -Wno-multichar -Wreturn-type)
+
+if(WARNING_AS_ERROR)
+  target_compile_options(sql PRIVATE -Werror)
+endif()
+
+if(BUILD_TEST_COVERAGE)
+  target_compile_options(sql PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
+  target_link_libraries(sql PRIVATE gcov)
+endif()
+
+target_include_directories(sql
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+set(PUBLIC_HEADERS
+  include/metadata-sql.h
+)
+
+target_link_libraries(sql
+  PUBLIC
+    common
+    rvnsqlite
+)
+
+set_target_properties(sql PROPERTIES
+  PUBLIC_HEADER "${PUBLIC_HEADERS}"
+  POSITION_INDEPENDENT_CODE ON
+  PREFIX "librvnmetadata-"
+)
+
+## bin
+
+add_library(bin
+  src/metadata-bin.cpp
+)
+
+target_compile_options(bin PRIVATE -W -Wall -Wextra -Wmissing-include-dirs -Wunknown-pragmas -Wpointer-arith
+-Wmissing-field-initializers -Wno-multichar -Wreturn-type)
+
+if(WARNING_AS_ERROR)
+  target_compile_options(bin PRIVATE -Werror)
+endif()
+
+if(BUILD_TEST_COVERAGE)
+  target_compile_options(bin PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
+  target_link_libraries(bin PRIVATE gcov)
+endif()
+
+target_include_directories(bin
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+set(PUBLIC_HEADERS
+  include/metadata-bin.h
+)
+
+target_link_libraries(bin
+  PUBLIC
+    common
+    rvnbinresource
+)
+
+set_target_properties(bin PROPERTIES
+  PUBLIC_HEADER "${PUBLIC_HEADERS}"
+  POSITION_INDEPENDENT_CODE ON
+  PREFIX "librvnmetadata-"
+)
+
+## file
+
+
+add_library(file
+  src/metadata-file.cpp
+)
+
+target_compile_options(file PRIVATE -W -Wall -Wextra -Wmissing-include-dirs -Wunknown-pragmas -Wpointer-arith
+-Wmissing-field-initializers -Wno-multichar -Wreturn-type)
+
+if(WARNING_AS_ERROR)
+  target_compile_options(file PRIVATE -Werror)
+endif()
+
+if(BUILD_TEST_COVERAGE)
+  target_compile_options(file PRIVATE -g -O0 --coverage -fprofile-arcs -ftest-coverage)
+  target_link_libraries(file PRIVATE gcov)
+endif()
+
+target_include_directories(file
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+set(PUBLIC_HEADERS
+  include/metadata-file.h
+)
+
+target_link_libraries(file
+  PUBLIC
+    common
+    sql
+    bin
+    json
     Boost::boost
     magic
   PRIVATE
     Boost::filesystem
 )
 
-set_target_properties(rvnmetadata PROPERTIES
+set_target_properties(file PROPERTIES
   PUBLIC_HEADER "${PUBLIC_HEADERS}"
   POSITION_INDEPENDENT_CODE ON
+  PREFIX "librvnmetadata-"
 )
 
+## install/exports
+
 include(GNUInstallDirs)
-install(TARGETS rvnmetadata
+install(TARGETS common bin sql json file
   EXPORT rvnmetadata-export
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -78,6 +239,7 @@ install(TARGETS rvnmetadata
 install(EXPORT rvnmetadata-export
   FILE
     rvnmetadata-targets.cmake
+  NAMESPACE rvnmetadata::
   DESTINATION
     ${CMAKE_INSTALL_DATADIR}/cmake/rvnmetadata
 )

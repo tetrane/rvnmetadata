@@ -4,7 +4,8 @@ add_executable(metadata_writer
 
 target_link_libraries(metadata_writer
   PUBLIC
-    rvnmetadata
+    common
+    file
     Boost::boost
   PRIVATE
     Boost::program_options

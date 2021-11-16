@@ -11,19 +11,6 @@
 #include <experimental/string_view>
 
 namespace reven {
-
-namespace sqlite {
-	class Metadata;
-}
-
-namespace binresource {
-class Metadata;
-}
-
-namespace jsonresource {
-class Metadata;
-}
-
 namespace metadata {
 
 ///
@@ -347,46 +334,6 @@ using CustomMetadata = std::unordered_map<std::string /* key */, std::string /* 
 class Metadata {
 public:
 	///
-	/// \brief from_resource Construct a metadata from a resource file pointed by the filename
-	/// \param filename The filename of the resource to open
-	/// \throws UnknownResourceError if we can't determine how to open this resource
-	/// \throws ReadMetadataError if there is an error when or after opening the resource
-	/// \throws std::out_of_range if a numerical identifier in the version doesn't fit in a std::uint64_t
-	static Metadata from_resource(const char* filename);
-
-	///
-	/// \brief from_raw_metadata Construct a metadata from a raw metadata extracted from a sqlite database
-	/// \param md The raw sqlite metadata
-	/// \throws MetadataError if the version or the resource type are ill-formed
-	/// \throws std::out_of_range if a numerical identifier in the version doesn't fit in a std::uint64_t
-	static Metadata from_raw_metadata(const reven::sqlite::Metadata& md);
-
-	///
-	/// \brief from_raw_metadata Construct a metadata from a raw metadata extracted from a binary file
-	/// \param md The raw binary metadata
-	/// \throws MetadataError if the version or the resource type are ill-formed
-	/// \throws std::out_of_range if a numerical identifier in the version doesn't fit in a std::uint64_t
-	static Metadata from_raw_metadata(const reven::binresource::Metadata& md);
-
-	///
-	/// \brief from_raw_metadata Construct a metadata from a raw metadata extracted from a json file
-	/// \param md The raw json metadata
-	/// \throws MetadataError if the version or the resource type are ill-formed
-	/// \throws std::out_of_range if a numerical identifier in the version doesn't fit in a std::uint64_t
-	static Metadata from_raw_metadata(const reven::jsonresource::Metadata& md);
-
-	///
-	/// \brief set_metadata Set the metadata of a resource pointed by the filename
-	/// \note The resource must already have metadata
-	/// \param filename The filename of the resource to write to
-	/// \param md The metadata to write in the resource
-	/// \throws UnknownResourceError if we can't determine how to open this resource
-	/// \throws WriteMetadataError if there is an error when or after opening the resource, e.g if the resource
-	///   doesn't have metadata
-	static void set_metadata(const char* filename, const Metadata& md);
-
-public:
-	///
 	/// \brief Metadata Construct a metadata instance
 	/// \param type The type of the resource
 	/// \param format_version The version of the resource's format
@@ -417,18 +364,6 @@ public:
 	         std::chrono::system_clock::time_point generation_date = std::chrono::system_clock::now());
 
 	///
-	/// \brief to_sqlite_raw_metadata Construct a raw sqlite metadata from the information stored in this metadata
-	reven::sqlite::Metadata to_sqlite_raw_metadata() const;
-
-	///
-	/// \brief to_bin_raw_metadata Construct a raw binary metadata from the information stored in this metadata
-	reven::binresource::Metadata to_bin_raw_metadata() const;
-
-	///
-	/// \brief to_json_raw_metadata Construct a raw json metadata from the information stored in this metadata
-	reven::jsonresource::Metadata to_json_raw_metadata() const;
-
-	///
 	/// \brief type get the resource type of this metadata
 	ResourceType type() const { return type_; }
 
@@ -453,16 +388,6 @@ public:
 	std::chrono::system_clock::time_point generation_date() const { return generation_date_; }
 
 	const CustomMetadata& custom_metadata() const { return custom_metadata_; }
-
-private:
-	enum class FormatType : std::uint8_t {
-		Sqlite,
-		Binary,
-		Json,
-	};
-
-private:
-	static FormatType get_resource_format_type(const char* filename);
 
 private:
 	ResourceType type_;

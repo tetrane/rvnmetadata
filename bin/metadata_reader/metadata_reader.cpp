@@ -5,7 +5,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <metadata.h>
+#include <metadata-common.h>
+#include <metadata-file.h>
 
 using RequiredMetadata = std::vector<std::pair<std::string, std::string>>;
 using CustomMetadata = std::vector<std::pair<std::string, std::string>>;
@@ -148,7 +149,7 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 
-		const auto md = reven::metadata::Metadata::from_resource(file.c_str());
+		const auto md = reven::metadata::from_resource(file.c_str());
 		const auto metadata = get_metadata(vars, md);
 		if (output_format == "text") {
 			print_metadata_text(metadata);

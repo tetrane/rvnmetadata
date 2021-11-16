@@ -4,7 +4,8 @@
 #include <iomanip>
 #include <string>
 
-#include <metadata.h>
+#include <metadata-common.h>
+#include <metadata-file.h>
 
 std::chrono::system_clock::time_point from_string_to_time_point(const std::string& gen_date)
 {
@@ -122,8 +123,8 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 
-		auto md = reven::metadata::Metadata::from_resource(file.c_str());
-		md.set_metadata(file.c_str(), build_metadata(vars, md));
+		auto md = reven::metadata::from_resource(file.c_str());
+		reven::metadata::set_metadata(file.c_str(), build_metadata(vars, md));
 
 	} catch (const std::runtime_error& error) {
 		std::cerr << "Error: " << error.what() << std::endl;
