@@ -1,4 +1,4 @@
-# rvnmetadata: a library to write/read metadata to/from REVEN resources.
+# rvnmetadata: a library to write/read metadata to/from Reven resources.
 
 ## License
 
